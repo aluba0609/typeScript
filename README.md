@@ -1,0 +1,1 @@
+npx tsc index.ts  运行编译
