@@ -1,4 +1,4 @@
-
+let isFunction=(value)=>{return typeof value=="function"}
 
 class promise{
     constructor(executor){
@@ -29,8 +29,8 @@ class promise{
             reject(error)
         }
     }
-    then(res){
-
+    then(onResovle,onReject){
+        isFunction(onResovle)
         console.log(res)
     }
 }
