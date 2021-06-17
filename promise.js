@@ -1,84 +1,136 @@
-class Mypromise {
+let resolvePromise = (promise2, x, resolve, reject) => {
+    //判断x的值 如果是普通值 直接resolve  如果是promise 继续调用then 根据status状态调用resolve 或者 reject  如果是promise2报错
+    if(promise2===x){
+        return reject( new TypeError("Chaining cycle detected for promise #<promise>"))
+    }
+    if(typeof x==='object'&&typeof x!==null||typeof x==='function'){
+        try {
+            let then=x.then//有可能x里面有 通过defineProperty来定义的的then
+            if(typeof then ==='function'){
+                then.call(x,(y)=>{
+                    resolve(y)
+                },r=>{
+                    reject(r)
+                })//能保证再次取then得值
+            }else{
+                resolve(x)//说明x是一个普通的对象 {then:1}
+            }
+        } catch (e) {
+            reject(e)
+        }
+    }else{
+        //x是一个普通值
+        resolve(x)
+    }
+}
+class Promise {
     constructor(executor) {
-        this.status = 'pending'  //状态值
-        this.value = undefined   //成功的返回值
-        this.reason = undefined	 //失败的返回值
-        this.onResolvedCallbacks = [] //成功的回调函数
-        this.onRejectedCallbacks = [] //失败的回调函数
-        // 成功
-        let resolve = (value) => {debugger
-            // pending用来屏蔽的，resolve和reject只能调用一个，不能同时调用，这就是pending的作用
+        this.status = 'pending'
+        this.value = undefined
+        this.reason = undefined
+        this.onResolvedCallbacks = []
+        this.onRejectedCallbacks = []
+        let resolve = (value) => {
+            debugger
             if (this.status == 'pending') {
                 this.status = 'fullFilled'
                 this.value = value
-                // 发布执行函数
                 this.onResolvedCallbacks.forEach(fn => fn())
             }
         }
-        // 失败
         let reject = (reason) => {
             if (this.status == 'pending') {
                 this.status = 'rejected'
                 this.reason = reason
-                //失败执行函数
                 this.onRejectedCallbacks.forEach(fn => fn())
             }
         }
         try {
-            // 执行函数
             executor(resolve, reject)
         } catch (err) {
-            // 失败则直接执行reject函数
             reject(err)
         }
     }
     then(onFullFilled, onRejected) {
-        // 这样就是一个递归
-        let promise2 = new Mypromise((resolve, reject) => {
-            // 函数里面调函数就跟第一次使用一样，主要的是这里面的this指向怎么变化的
-            // 同步
+        let promise2 = new Promise((resolve, reject) => {
             let x
-            console.log('this', this)
             if (this.status == 'fullFilled') {
-                // 箭头函数，无论this一直是指向最外层的对象
-                x = onFullFilled(this.value)
-                resolve(x) // resolve(x) // 这一步x只能处理普通值，但是x可能是一个函数对象，或者promise,所以要对x进行判断
-                // 添加一个resolvePromise（）的方法来判断x跟promise2的状态，决定promise2是走成功还是失败
+                setTimeout(() => {//定时器是为了拿到new promise 后赋值给promise2 
+                    try {//防止then(()=>{ throw new Error()})  需要放在定时器里面 因为异步问题
+                        x = onFullFilled(this.value)
+                        resolvePromise(promise2, x, resolve, reject)
+                    } catch (e) {
+                        reject(e)
+                    }
+                }, 0)
             }
             if (this.status == 'rejected') {
-                x = onRejected(this.reason)
-                reject(x)
+                setTimeout(() => {
+                    try {
+                        x = onRejected(this.reason)
+                        resolvePromise(promise2, x, resolve, reject)
+                    } catch (e) {
+                        reject(e)
+                    }
+                }, 0)
             }
-            // 异步
             if (this.status == 'pending') {
-                // 在pending状态的时候先订阅
                 this.onResolvedCallbacks.push(() => {
-                    // todo
-                    x = onFullFilled(this.value)
-                    resolve(x)
+                    setTimeout(() => {
+                        try {
+                            x = onFullFilled(this.value)
+                            resolvePromise(promise2, x, resolve, reject)
+                        } catch (e) {
+                            reject(e)
+                        }
+                    }, 0)
                 })
                 this.onRejectedCallbacks.push(() => {
-                    // todo
-                    x = onRejected(this.reason)
-                    resolve(x)
+                    setTimeout(() => {
+                        try {
+                            x = onRejected(this.reason)
+                            resolvePromise(promise2, x, resolve, reject)
+                        } catch (e) {
+                            reject(e)
+                        }
+                    }, 0)
                 })
             }
         })
-        return promise2   //then方法返回一个promise对象
+        return promise2
     }
 }
 
 
-const p = new Promise((resolve, reject) => {
+
+
+//例子 promise2==x
+// let p = new Promise((resolve, reject) => {
+//     resolve()
+// })
+// let promise2=p.then(() => {
+//     return promise2
+// })
+// promise2.then(null,err => {
+//     console.log(err)
+// })
+
+let p = new Promise((resolve, reject) => {
     resolve(100)
 })
-p.then((data) => {
-    return 100 * data
-}).then((data) => {
-    return new Promise((resolve, reject) => {
-        console.log(data)
-        resolve(data)
+let promise2=p.then(data=>{
+    return new Promise((resolve,reject)=>{
+        setTimeout(()=>{
+            reject('hello')
+        },1000)
     })
-}).then((data) => {
-    console.log('result', data) // 10000
+})
+
+promise2.then(data=>{
+    console.log(data)
+},e=>{
+    console.log(e)
+    return 100
+}).then((data)=>{
+    console.log('s '+data)
 })
