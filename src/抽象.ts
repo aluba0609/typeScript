@@ -33,26 +33,26 @@
 //用abstract关键字定义抽象类和抽象方法，抽象类中的抽象方法不包含具体实现并且必须在派生类中实现(不能被实例化  必须包含抽象方法)
 //abstract 抽象方法是能放在抽象类里面
 //抽象类和抽象方法用来定义标准 ，标准Animal 这个类要求他的子类必须包含eat方法
-abstract class Animal{
-    public name:string;
-    constructor(name:string){
-        this.name=name;
-    }
-    abstract eat():any//必须包含抽象方法  不能被实例化
-}
-// var a =new Animal()//报错 
+// abstract class Animal{
+//     public name:string;
+//     constructor(name:string){
+//         this.name=name;
+//     }
+//     abstract eat():any//必须包含抽象方法  不能被实例化
+// }
+// // var a =new Animal()//报错 
 
-class Dog extends Animal{
-    //抽象类的子类必须实现抽象类里面的抽象方法
-    constructor(name:string){
-        super(name)
-    }
-    eat(){
-        console.log(this.name+'吃粮食') 
-    }
-}
-var d=new Dog('小黑');
-d.eat()
+// class Dog extends Animal{
+//     //抽象类的子类必须实现抽象类里面的抽象方法
+//     constructor(name:string){
+//         super(name)
+//     }
+//     eat(){
+//         console.log(this.name+'吃粮食') 
+//     }
+// }
+// var d=new Dog('小黑');
+// d.eat()
 
 // class Cat extends Animal{
 //     constructor(name:string){

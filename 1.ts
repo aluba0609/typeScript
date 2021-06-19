@@ -64,3 +64,4 @@ d.eat()
 // }
 // var c=new Cat('小黑');//报错没有eat方法
 // c.run()
+
