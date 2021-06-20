@@ -56,7 +56,7 @@
 // let a:Animals={
 //     name:"dog",
 //     eats:function (params:string) {
-        
+
 //     }
 // }
 // class Dog implements Animals{
@@ -197,7 +197,7 @@
 //     get(id: number): any[] {
 //         throw new Error("Method not implemented.");
 //     }
-    
+
 // }
 
 // class user{
@@ -212,52 +212,52 @@
 // mysqldb.add(u)
 
 
-class test{
-    private privateName:string;
-    protected protectedName:string;
-    static staticName:"staticName";
-    constructor(privateName:string,protectedName:string){
-        this.privateName=privateName;
-        this.protectedName=protectedName;
-    }
-    private getPrivate():void{
-        console.log("测试继承")
-        console.log(this.privateName)
-    }
-    protected getProtected():void{
-        console.log("测试继承")
-        console.log(this.privateName)
-    }
-    public init(){
-        this.getPrivate()
-        this.getProtected()
-    }
-    static getStatic(){
-        console.log(this.staticName)//静态属性只能在静态方法调用  且无法继承
-    }
-}
+// class test {
+//     private privateName: string;
+//     protected protectedName: string;
+//     static staticName: "staticName";
+//     constructor(privateName: string, protectedName: string) {
+//         this.privateName = privateName;
+//         this.protectedName = protectedName;
+//     }
+//     private getPrivate(): void {
+//         console.log("测试继承")
+//         console.log(this.privateName)
+//     }
+//     protected getProtected(): void {
+//         console.log("测试继承")
+//         console.log(this.privateName)
+//     }
+//     public init() {
+//         this.getPrivate()
+//         this.getProtected()
+//     }
+//     static getStatic() {
+//         console.log(this.staticName)//静态属性只能在静态方法调用  且无法继承
+//     }
+// }
 
-class otherTest extends test{
-    private otherName:string
-    constructor(privateName,protectedName,otherName){
-        super(privateName,protectedName)
-        this.otherName=otherName
-    }
-    otherInit(){
-        // this.getPrivate() //无法在子类中调用父类私有的方法
-        this.getProtected()//能够在子类中调用父类的保护方法
-        // console.log(this.privateName)//无法在子类中调用父类私有的属性
-        console.log(this.protectedName)//能够在子类中调用父类的保护属性
-        console.log(this.otherName)
-    }
-}
+// class otherTest extends test {
+//     private otherName: string
+//     constructor(privateName, protectedName, otherName) {
+//         super(privateName, protectedName)
+//         this.otherName = otherName
+//     }
+//     otherInit() {
+//         // this.getPrivate() //无法在子类中调用父类私有的方法
+//         this.getProtected()//能够在子类中调用父类的保护方法
+//         // console.log(this.privateName)//无法在子类中调用父类私有的属性
+//         console.log(this.protectedName)//能够在子类中调用父类的保护属性
+//         console.log(this.otherName)
+//     }
+// }
 
-let t=new test("privateName","protectedName")
-// t.getPrivate()//无法在类外部调用私有
-// t.getProtected()//无法在类外部调用保护类型
-t.init()
+// let t = new test("privateName", "protectedName")
+// // t.getPrivate()//无法在类外部调用私有
+// // t.getProtected()//无法在类外部调用保护类型
+// t.init()
 
-let ot=new otherTest("privateName","protectedName","otherName")
-// ot.getPrivate()//无法在子类中调用父类私有方法
-// ot.getProtected()//无法在子类中调用父类保护方法
-ot.otherInit()
+// let ot = new otherTest("privateName", "protectedName", "otherName")
+// // ot.getPrivate()//无法在子类中调用父类私有方法
+// // ot.getProtected()//无法在子类中调用父类保护方法
+// ot.otherInit()
