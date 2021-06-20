@@ -261,3 +261,61 @@
 // // ot.getPrivate()//无法在子类中调用父类私有方法
 // // ot.getProtected()//无法在子类中调用父类保护方法
 // ot.otherInit()
+
+
+// //装饰器
+
+// //属性装饰器
+// function classData(params:any) {debugger
+//     // console.log(params)
+//     return function (target:any,attr:any) {//传入的是一个原型对象，属性名称
+//         console.log('属性装饰器',target,attr)
+//         console.log(target[attr])
+//     }
+// }
+// //参数装饰器
+// function classParams(params:any) {debugger
+//     // console.log(params)
+//     return function (target:any,paramsName:any,paramsIndex:any) {//传入的是一个原型对象，函数名称，参数下标
+//         console.log('参数装饰器',target,paramsName,paramsIndex)
+//     }
+// }
+// //函数装饰器
+// function classMathod(params:any) {debugger
+//     // console.log(params)
+//     return function (target:any,mathodName:any,desc:any) {//传入的是一个原型对象，函数名称，属性（是否可便利，是否可更改值，是否可更改属性，值）
+//         console.log('函数装饰器',target,mathodName,desc)
+//     }
+// }
+// //类装饰器
+// function classDes(params:any) {debugger
+//     // console.log(params)
+//     return function (constructor:any) :any{//传入的是一个构造函数
+//         console.log('类装饰器',constructor)
+//         return class extends constructor{//更改构造函数
+//           testChangeName:string="更改名字成功"
+//           fn(restr:string){
+//             console.log(restr,this.testChangeName,this.name)
+//           }
+//         }
+
+//     }
+// }
+
+// @classDes("类装饰器")
+// class decorator{
+//     @classData("属性装饰器")
+//     name:string
+//     testChangeName:string='测试更改名字'
+//     constructor( name:string){
+//         this.name=name;
+//     }
+
+//     @classMathod("函数装饰器")
+//     fn(@classParams("参数装饰器") str:string) {
+//         console.log("我是JoinDec中的fn函数",str)
+//     }
+// }
+
+// let jd:any=new decorator("装饰器")
+// jd.fn("fn函数")
