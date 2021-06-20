@@ -1,72 +1,3 @@
-// //多态属于继承
-// class Animal{
-//     name:string;
-//     constructor(name:string){
-//         this.name=name;
-//     }
-//     eat(){
-//         console.log('吃的方法')
-//     }
-// }
-
-// class Dog extends Animal{
-//     constructor(name:string){
-//         super(name)
-//     }
-//     eat(){
-//         return this.name+'吃粮食'
-//     }
-// }
-// class Cat extends Animal{
-//     constructor(name:string){
-//         super(name)
-//     }
-//     eat(){
-//         return this.name+'吃老鼠'
-//     }
-// }
-
-
-
-
-//typescript 中的抽象类，他是提供其他类继承的基类，不能直接被实例化
-//用abstract关键字定义抽象类和抽象方法，抽象类中的抽象方法不包含具体实现并且必须在派生类中实现(不能被实例化  必须包含抽象方法)
-//abstract 抽象方法是能放在抽象类里面
-// //抽象类和抽象方法用来定义标准 ，标准Animal 这个类要求他的子类必须包含eat方法
-// abstract class Animal{
-//     public name:string;
-//     constructor(name:string){
-//         this.name=name;
-//     }
-//     abstract eat():any//必须包含抽象方法  不能被实例化
-// }
-// // var a =new Animal()//报错 
-
-// class Dog extends Animal{
-//     //抽象类的子类必须实现抽象类里面的抽象方法
-//     constructor(name:string){
-//         super(name)
-//     }
-//     eat(){
-//         console.log(this.name+'吃粮食') 
-//     }
-// }
-// var d=new Dog('小黑');
-// d.eat()
-
-// class Cat extends Animal{
-//     constructor(name:string){
-//         super(name)
-//     }
-//     run(){
-//         return this.name+'吃老鼠'
-//     }
-// }
-// var c=new Cat('小黑');//报错没有eat方法
-// c.run()
-
-
-
 //批量方法传入参数进行约束
 
 // interface params{
@@ -88,7 +19,7 @@
 
 //函数类型接口：对方法传入的参数 以及返回值进行约束
 
-// interface fn{
+// interface fn{  //入参可少不可多
 //     (key:string,val:string):string
 // }
 
@@ -119,7 +50,14 @@
 
 // interface Animals{
 //     name:string;
-//     eats(str:string):void;//参数不强制传 
+//     eats(str:string,str1:string):void;//入参可少不可多
+// }
+
+// let a:Animals={
+//     name:"dog",
+//     eats:function (params:string) {
+        
+//     }
 // }
 // class Dog implements Animals{
 //     name:string
@@ -238,37 +176,88 @@
 
 
 
-interface DBI<T>{
-    add(info:T):boolean;
-    update(info:T,id:number):boolean;
-    delete(id:number):boolean;
-    get(id:number):any[];
-}
+// interface DBI<T>{
+//     add(info:T):boolean;
+//     update(info:T,id:number):boolean;
+//     delete(id:number):boolean;
+//     get(id:number):any[];
+// }
 
-class MysqlDb<T> implements DBI<T>{
-    add(info: T): boolean {
-        console.log(info)
-        return true
-    }
-    update(info: T, id: number): boolean {
-        throw new Error("Method not implemented.");
-    }
-    delete(id: number): boolean {
-        throw new Error("Method not implemented.");
-    }
-    get(id: number): any[] {
-        throw new Error("Method not implemented.");
-    }
+// class MysqlDb<T> implements DBI<T>{
+//     add(info: T): boolean {
+//         console.log(info)
+//         return true
+//     }
+//     update(info: T, id: number): boolean {
+//         throw new Error("Method not implemented.");
+//     }
+//     delete(id: number): boolean {
+//         throw new Error("Method not implemented.");
+//     }
+//     get(id: number): any[] {
+//         throw new Error("Method not implemented.");
+//     }
     
+// }
+
+// class user{
+//     user:string|undefined;
+//     password:string|undefined;
+// }
+// var u=new user();
+// u.user="张三";
+// u.password="123456";
+
+// var mysqldb=new MysqlDb<user>();
+// mysqldb.add(u)
+
+
+class test{
+    private privateName:string;
+    protected protectedName:string;
+    static staticName:"staticName";
+    constructor(privateName:string,protectedName:string){
+        this.privateName=privateName;
+        this.protectedName=protectedName;
+    }
+    private getPrivate():void{
+        console.log("测试继承")
+        console.log(this.privateName)
+    }
+    protected getProtected():void{
+        console.log("测试继承")
+        console.log(this.privateName)
+    }
+    public init(){
+        this.getPrivate()
+        this.getProtected()
+    }
+    static getStatic(){
+        console.log(this.staticName)//静态属性只能在静态方法调用  且无法继承
+    }
 }
 
-class user{
-    user:string|undefined;
-    password:string|undefined;
+class otherTest extends test{
+    private otherName:string
+    constructor(privateName,protectedName,otherName){
+        super(privateName,protectedName)
+        this.otherName=otherName
+    }
+    otherInit(){
+        // this.getPrivate() //无法在子类中调用父类私有的方法
+        this.getProtected()//能够在子类中调用父类的保护方法
+        // console.log(this.privateName)//无法在子类中调用父类私有的属性
+        console.log(this.protectedName)//能够在子类中调用父类的保护属性
+        console.log(this.otherName)
+    }
 }
-var u=new user();
-u.user="张三";
-u.password="123456";
 
-var mysqldb=new MysqlDb<user>();
-mysqldb.add(u)
+let t=new test("privateName","protectedName")
+// t.getPrivate()//无法在类外部调用私有
+// t.getProtected()//无法在类外部调用保护类型
+t.init()
+
+let ot=new otherTest("privateName","protectedName","otherName")
+// ot.getPrivate()//无法在子类中调用父类私有方法
+// ot.getProtected()//无法在子类中调用父类保护方法
+ot.otherInit()
