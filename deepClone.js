@@ -77,3 +77,10 @@ function find(arr, item) {
 // 链接：https://juejin.cn/post/7005952780334530574
 // 来源：稀土掘金
 // 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+var b = {};
+var a = {a1: b, a2: b};
+
+a.a1 === a.a2 // true
+
+var c = cloneForce(a);
+c.a1 === c.a2 // true
